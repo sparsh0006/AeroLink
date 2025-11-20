@@ -1,0 +1,100 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+.next/
+out/
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Environment & secrets
+.env
+.env.*.local
+.env.local
+.env.test
+.env.production
+.secret
+secrets.json
+*.pem
+*.key
+
+# Logs
+logs/
+*.log
+debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+ENV/
+env/
+.venv/
+
+# Java / JVM
+target/
+*.class
+*.jar
+*.war
+*.ear
+.build/
+.gradle/
+out/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.resharper
+*.ncrunch*
+
+# Go
+vendor/
+Godeps/_workspace/
+
+# Rust
+target/
+
+# Docker
+docker-compose.override.yml
+*.tar
+docker-compose.*.yml
+
+# CI / tooling
+.idea/
+.vscode/
+.envrc
+lerna-debug.log
+.sass-cache/
+.cache/
+
+# Misc
+*.local
+*.sqlite
+*.db
+*.pid
+tmp/
+temp/
+*.tgz
+*.zip
