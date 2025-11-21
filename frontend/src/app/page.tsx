@@ -2,13 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { fetchRecentReadings, Reading } from '@/lib/api';
+import { fetchRecentReadings, fetchAllNodes, Reading, Node } from '@/lib/api';
 import MapView from '@/componnents/MapView';
 import NodeCard from '@/componnents/NodeCard';
 
 export default function Home() {
   const { data: readings, error, isLoading } = useSWR<Reading[]>('readings', fetchRecentReadings, {
     refreshInterval: 30000, // Refresh every 30 seconds
+  });
+
+  const { data: nodes } = useSWR<Node[]>('nodes', fetchAllNodes, {
+    refreshInterval: 30000,
   });
 
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
@@ -27,6 +31,28 @@ export default function Home() {
     }
     return acc;
   }, {} as Record<string, Reading>);
+
+  // Combine readings and nodes for map display
+    const mapDataPoints = [
+      ...Object.values(latestReadingPerNode),
+      ...(nodes || []).filter(node => 
+        !Object.keys(latestReadingPerNode).includes(node.nodeId)
+      ).map(node => ({
+        _id: node._id,
+        nodeId: node.nodeId,
+        timestamp: (node as any).registeredAt?.toString() || new Date().toISOString(),
+        location: node.location,
+        sensors: {
+          pm25: 0,
+          pm10: 0,
+          temp: 0,
+          rh: 0
+        },
+        aqi: { value: 0, category: 'No Data' },
+        source: 'node' as const,
+        hedera: undefined
+      }))
+    ];
 
   if (error) {
     return (
@@ -53,9 +79,23 @@ export default function Home() {
                 Decentralized Weather & Pollution Monitoring Network
               </p>
             </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-600">Powered by</div>
-              <div className="text-lg font-semibold text-purple-600">Hedera</div>
+            <div className="flex items-center gap-4">
+              <a
+                href="/register"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+              >
+                Register Node
+              </a>
+              <a
+                href="/marketplace"
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+              >
+                Marketplace
+              </a>
+              <div className="text-right">
+                <div className="text-sm text-gray-600">Powered by</div>
+                <div className="text-lg font-semibold text-purple-600">Hedera</div>
+              </div>
             </div>
           </div>
         </div>
@@ -67,7 +107,7 @@ export default function Home() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="text-sm text-gray-600 mb-1">Active Nodes</div>
             <div className="text-3xl font-bold text-gray-800">
-              {uniqueNodes.length}
+              {(nodes?.filter(n => n.status === 'active').length || 0) + uniqueNodes.length}
             </div>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
@@ -105,7 +145,7 @@ export default function Home() {
               <div className="text-gray-600">Loading map...</div>
             </div>
           ) : (
-            <MapView readings={Object.values(latestReadingPerNode)} />
+            <MapView readings={mapDataPoints} />
           )}
         </div>
 

@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import { connectDB } from './services/mongo';
 import { initHederaClient } from './services/hedera';
 import readingsRouter from './routes/readings';
+import nodesRouter from './routes/nodes';
+import marketplaceRouter from './routes/marketplace';
 
 dotenv.config();
 
@@ -16,6 +18,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api', readingsRouter);
+app.use('/api', nodesRouter);
+app.use('/api', marketplaceRouter);
 
 // Health check
 app.get('/health', (req, res) => {
