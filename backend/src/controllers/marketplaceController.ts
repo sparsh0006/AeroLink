@@ -136,44 +136,53 @@ export const purchaseData = async (req: Request, res: Response): Promise<void> =
 
     await purchase.save();
 
-    // Simulate token transfer (in real scenario, buyer would send tokens)
+    // Process token transfer and update node owner's revenue
     try {
       const tokenId = process.env.HEDERA_TOKEN_ID;
-      if (tokenId && node.ownerWallet) {
-        // In production, this would be buyer -> seller transfer
-        // For demo, we just log it
-        console.log('💰 Token transfer:', {
-          from: buyerWallet,
-          to: node.ownerWallet,
-          amount: tokenAmount,
-          tokenId
-        });
+      
+      // In production, this would be actual Hedera token transfer from buyer to node owner
+      console.log('💰 Processing payment:', {
+        from: buyerWallet,
+        to: node.ownerWallet,
+        amount: tokenAmount,
+        amountUSD: amount,
+        tokenId
+      });
 
-        // Uncomment for actual transfer:
-        // const txId = await transferTokens(tokenId, node.ownerWallet, tokenAmount);
-        // purchase.hederaTxId = txId;
-        
-        purchase.status = 'completed';
-        purchase.hederaTxId = 'demo-tx-' + Date.now();
-      }
-
-      // Update node revenue
-      node.revenue = (node.revenue || 0) + amount;
-      await node.save();
+      // Uncomment for actual Hedera token transfer:
+      // if (tokenId && node.ownerWallet) {
+      //   const txId = await transferTokens(tokenId, node.ownerWallet, tokenAmount);
+      //   purchase.hederaTxId = txId;
+      // }
+      
+      // Mark purchase as completed
+      purchase.status = 'completed';
+      purchase.hederaTxId = 'demo-tx-' + Date.now();
       await purchase.save();
 
-      console.log('✅ Data purchase completed:', purchase._id);
+      // Update node owner's revenue (THIS IS THE KEY PART)
+      node.revenue = (node.revenue || 0) + amount;
+      await node.save();
+
+      console.log(`✅ Payment completed: ${amount} USD transferred to node owner ${node.ownerName}`);
+      console.log(`💵 Node ${nodeId} total revenue: ${node.revenue} USD`);
 
       res.status(201).json({
         message: 'Purchase completed successfully',
         purchase,
-        accessToken: `access-${purchase._id}` // Simple access token for data retrieval
+        accessToken: `access-${purchase._id}`,
+        payment: {
+          amountUSD: amount,
+          amountAERO: tokenAmount,
+          recipient: node.ownerName,
+          recipientWallet: node.ownerWallet
+        }
       });
     } catch (transferError) {
       purchase.status = 'failed';
       await purchase.save();
       
-      console.error('Token transfer failed:', transferError);
+      console.error('Payment processing failed:', transferError);
       res.status(500).json({ error: 'Payment processing failed' });
     }
   } catch (error) {

@@ -162,7 +162,7 @@ export default function Marketplace() {
                 type="text"
                 value={filters.city}
                 onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                 placeholder="Enter city name"
               />
             </div>
@@ -173,7 +173,7 @@ export default function Marketplace() {
                 step="0.01"
                 value={filters.minPrice}
                 onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                 placeholder="0.00"
               />
             </div>
@@ -184,7 +184,7 @@ export default function Marketplace() {
                 step="0.01"
                 value={filters.maxPrice}
                 onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                 placeholder="10.00"
               />
             </div>
@@ -333,7 +333,7 @@ export default function Marketplace() {
                         required
                         value={buyerInfo.wallet}
                         onChange={(e) => setBuyerInfo({ ...buyerInfo, wallet: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                         placeholder="0.0.12345"
                       />
                     </div>
@@ -346,7 +346,7 @@ export default function Marketplace() {
                         required
                         value={buyerInfo.email}
                         onChange={(e) => setBuyerInfo({ ...buyerInfo, email: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                         placeholder="buyer@example.com"
                       />
                     </div>
@@ -411,7 +411,7 @@ export default function Marketplace() {
                       max="365"
                       value={duration}
                       onChange={(e) => setDuration(parseInt(e.target.value))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                 )}
@@ -427,7 +427,7 @@ export default function Marketplace() {
                       step="100"
                       value={readingsCount}
                       onChange={(e) => setReadingsCount(parseInt(e.target.value))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                     />
                   </div>
                 )}

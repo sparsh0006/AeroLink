@@ -33,7 +33,8 @@ export interface IReading extends Document {
   location: ILocation;
   sensors: ISensor;
   aqi: IAQI;
-  source: 'mock' | 'live';
+  // include 'auto' here
+  source: 'mock' | 'live' | 'auto';
   battery?: number;
   firmware?: string;
   hedera?: IHedera;
@@ -59,7 +60,8 @@ const ReadingSchema: Schema = new Schema({
     value: { type: Number, required: true },
     category: { type: String, required: true }
   },
-  source: { type: String, enum: ['mock', 'live'], default: 'mock' },
+  // add 'auto' to the enum; keep default as 'mock' or set to 'auto' if preferred
+  source: { type: String, enum: ['mock', 'live', 'auto'], default: 'mock' },
   battery: { type: Number },
   firmware: { type: String },
   hedera: {

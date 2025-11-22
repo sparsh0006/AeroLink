@@ -3,9 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './services/mongo';
 import { initHederaClient } from './services/hedera';
+import { initializeAutoReadings } from './services/autoReadingService';
 import readingsRouter from './routes/readings';
 import nodesRouter from './routes/nodes';
 import marketplaceRouter from './routes/marketplace';
+import dashboardRouter from './routes/dashboard';
 
 dotenv.config();
 
@@ -20,6 +22,7 @@ app.use(express.json());
 app.use('/api', readingsRouter);
 app.use('/api', nodesRouter);
 app.use('/api', marketplaceRouter);
+app.use('/api', dashboardRouter);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -39,6 +42,9 @@ const startServer = async () => {
     // Initialize Hedera client
     initHederaClient();
 
+    // Initialize auto-readings for existing nodes
+    await initializeAutoReadings();
+
     app.listen(PORT, () => {
       console.log('🚀 AeroLink DePIN Backend');
       console.log('─'.repeat(50));
@@ -47,7 +53,10 @@ const startServer = async () => {
       console.log(`   POST http://localhost:${PORT}/api/readings`);
       console.log(`   GET  http://localhost:${PORT}/api/readings`);
       console.log(`   GET  http://localhost:${PORT}/api/readings/:nodeId`);
+      console.log(`   POST http://localhost:${PORT}/api/nodes`);
+      console.log(`   GET  http://localhost:${PORT}/api/marketplace/listings`);
       console.log('─'.repeat(50));
+      console.log('⏰ Auto-readings enabled for all active nodes');
     });
   } catch (error) {
     console.error('Failed to start server:', error);

@@ -160,3 +160,9 @@ export const fetchMarketplaceStats = async (): Promise<any> => {
   const response = await axios.get(`${API_URL}/marketplace/stats`);
   return response.data;
 };
+
+// Dashboard API
+export const fetchDashboardStats = async (): Promise<any> => {
+  const response = await axios.get(`${API_URL}/dashboard/stats`);
+  return response.data;
+};

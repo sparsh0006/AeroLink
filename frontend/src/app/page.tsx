@@ -2,17 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { fetchRecentReadings, fetchAllNodes, Reading, Node } from '@/lib/api';
+import { fetchRecentReadings, fetchAllNodes, fetchDashboardStats, Reading, Node } from '@/lib/api';
 import MapView from '@/componnents/MapView';
 import NodeCard from '@/componnents/NodeCard';
 
 export default function Home() {
   const { data: readings, error, isLoading } = useSWR<Reading[]>('readings', fetchRecentReadings, {
-    refreshInterval: 30000, // Refresh every 30 seconds
+    refreshInterval: 5000, // Refresh every 5 seconds to show new readings
   });
 
   const { data: nodes } = useSWR<Node[]>('nodes', fetchAllNodes, {
-    refreshInterval: 30000,
+    refreshInterval: 10000, // Refresh every 10 seconds
+  });
+
+  const { data: stats } = useSWR('dashboard-stats', fetchDashboardStats, {
+    refreshInterval: 5000, // Refresh stats every 5 seconds
   });
 
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
@@ -33,11 +37,13 @@ export default function Home() {
   }, {} as Record<string, Reading>);
 
   // Combine readings and nodes for map display
-    const mapDataPoints = [
-      ...Object.values(latestReadingPerNode),
-      ...(nodes || []).filter(node => 
-        !Object.keys(latestReadingPerNode).includes(node.nodeId)
-      ).map(node => ({
+  const mapDataPoints: Reading[] = [
+    ...Object.values(latestReadingPerNode),
+    ...(nodes || []).filter(node => 
+      !Object.keys(latestReadingPerNode).includes(node.nodeId)
+    ).map(node => {
+      const nodeHedera: any = (node as any).hedera;
+      return {
         _id: node._id,
         nodeId: node.nodeId,
         timestamp: (node as any).registeredAt?.toString() || new Date().toISOString(),
@@ -50,9 +56,17 @@ export default function Home() {
         },
         aqi: { value: 0, category: 'No Data' },
         source: 'node' as const,
-        hedera: undefined
-      }))
-    ];
+        hedera: nodeHedera
+          ? {
+              topicId: nodeHedera.topicId,
+              messageId: nodeHedera.messageId ?? nodeHedera.registrationTxId ?? '',
+              consensusTimestamp: nodeHedera.consensusTimestamp ?? new Date().toISOString(),
+              publishedMessage: nodeHedera.publishedMessage ?? null
+            }
+          : undefined
+      } as Reading;
+    })
+  ];
 
   if (error) {
     return (
@@ -107,30 +121,25 @@ export default function Home() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="text-sm text-gray-600 mb-1">Active Nodes</div>
             <div className="text-3xl font-bold text-gray-800">
-              {(nodes?.filter(n => n.status === 'active').length || 0) + uniqueNodes.length}
+              {stats?.activeNodes || 0}
             </div>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <div className="text-sm text-gray-600 mb-1">Total Readings</div>
             <div className="text-3xl font-bold text-gray-800">
-              {readings?.length || 0}
+              {stats?.totalReadings || 0}
             </div>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <div className="text-sm text-gray-600 mb-1">Avg AQI</div>
             <div className="text-3xl font-bold text-gray-800">
-              {readings
-                ? Math.round(
-                    readings.reduce((sum, r) => sum + r.aqi.value, 0) /
-                      readings.length
-                  )
-                : 0}
+              {stats?.avgAQI || 0}
             </div>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <div className="text-sm text-gray-600 mb-1">Hedera Verified</div>
             <div className="text-3xl font-bold text-purple-600">
-              {readings?.filter((r) => r.hedera).length || 0}
+              {stats?.hederaVerified || 0}
             </div>
           </div>
         </div>

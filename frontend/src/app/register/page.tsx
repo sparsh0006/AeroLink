@@ -90,6 +90,8 @@ export default function RegisterNode() {
     }
   };
 
+  const inputClass = "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-12">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -138,7 +140,7 @@ export default function RegisterNode() {
                     required
                     value={formData.ownerName}
                     onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="John Doe"
                   />
                 </div>
@@ -151,7 +153,7 @@ export default function RegisterNode() {
                     required
                     value={formData.ownerEmail}
                     onChange={(e) => setFormData({...formData, ownerEmail: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="owner@example.com"
                   />
                 </div>
@@ -164,7 +166,7 @@ export default function RegisterNode() {
                     required
                     value={formData.ownerWallet}
                     onChange={(e) => setFormData({...formData, ownerWallet: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="0.0.12345"
                   />
                   <p className="text-xs text-gray-500 mt-1">This address will receive rewards and payments</p>
@@ -186,7 +188,7 @@ export default function RegisterNode() {
                     required
                     value={formData.location.lat}
                     onChange={(e) => setFormData({...formData, location: {...formData.location, lat: e.target.value}})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="11.0168"
                   />
                 </div>
@@ -200,7 +202,7 @@ export default function RegisterNode() {
                     required
                     value={formData.location.lon}
                     onChange={(e) => setFormData({...formData, location: {...formData.location, lon: e.target.value}})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="76.9558"
                   />
                 </div>
@@ -213,7 +215,7 @@ export default function RegisterNode() {
                     required
                     value={formData.location.address}
                     onChange={(e) => setFormData({...formData, location: {...formData.location, address: e.target.value}})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="123 Main Street"
                   />
                 </div>
@@ -226,7 +228,7 @@ export default function RegisterNode() {
                     required
                     value={formData.location.city}
                     onChange={(e) => setFormData({...formData, location: {...formData.location, city: e.target.value}})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="Coimbatore"
                   />
                 </div>
@@ -239,7 +241,7 @@ export default function RegisterNode() {
                     required
                     value={formData.location.state}
                     onChange={(e) => setFormData({...formData, location: {...formData.location, state: e.target.value}})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="Tamil Nadu"
                   />
                 </div>
@@ -252,7 +254,7 @@ export default function RegisterNode() {
                     required
                     value={formData.location.country}
                     onChange={(e) => setFormData({...formData, location: {...formData.location, country: e.target.value}})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className={inputClass}
                     placeholder="India"
                   />
                 </div>
@@ -274,7 +276,7 @@ export default function RegisterNode() {
                       onChange={() => handleSensorToggle(sensor)}
                       className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
                     />
-                    <span className="text-sm text-gray-700 font-medium">{sensor}</span>
+                    <span className="text-sm text-gray-900 font-medium">{sensor}</span>
                   </label>
                 ))}
               </div>
@@ -292,7 +294,7 @@ export default function RegisterNode() {
                     className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
                   />
                   <div>
-                    <span className="text-sm font-medium text-gray-700 block">
+                    <span className="text-sm font-medium text-gray-900 block">
                       Make my data available for sale
                     </span>
                     <span className="text-xs text-gray-500">
@@ -313,7 +315,7 @@ export default function RegisterNode() {
                       step="0.01"
                       value={formData.pricing.pricePerReading}
                       onChange={(e) => setFormData({...formData, pricing: {...formData.pricing, pricePerReading: e.target.value}})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className={inputClass}
                       placeholder="0.10"
                     />
                   </div>
@@ -326,7 +328,7 @@ export default function RegisterNode() {
                       step="0.01"
                       value={formData.pricing.subscriptionMonthly}
                       onChange={(e) => setFormData({...formData, pricing: {...formData.pricing, subscriptionMonthly: e.target.value}})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className={inputClass}
                       placeholder="50.00"
                     />
                   </div>
@@ -339,7 +341,7 @@ export default function RegisterNode() {
                       step="0.01"
                       value={formData.pricing.bulkDataPrice}
                       onChange={(e) => setFormData({...formData, pricing: {...formData.pricing, bulkDataPrice: e.target.value}})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className={inputClass}
                       placeholder="80.00"
                     />
                   </div>

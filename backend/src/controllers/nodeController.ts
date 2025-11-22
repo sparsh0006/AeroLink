@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import Node from '../models/Node';
 import Reading from '../models/Reading';
 import { publishToTopic } from '../services/hedera';
+import { startAutoReadings } from '../services/autoReadingService';
 
 // Generate unique node ID
 const generateNodeId = (): string => {
@@ -87,7 +88,11 @@ export const registerNode = async (req: Request, res: Response): Promise<void> =
 
     await node.save();
 
+    // Start automatic readings for this node (every 15 seconds)
+    startAutoReadings(nodeId);
+
     console.log('✅ Node registered successfully:', nodeId);
+    console.log('⏰ Auto-readings started for:', nodeId);
 
     res.status(201).json({
       message: 'Node registered successfully on Hedera network',
