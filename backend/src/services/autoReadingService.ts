@@ -150,7 +150,7 @@ export const generateAndPublishReading = async (nodeId: string): Promise<any> =>
     node.lastSeen = new Date();
     await node.save();
 
-    console.log(`📊 Auto-generated reading for ${nodeId} with Hedera proof`);
+    console.log(`📊 live-generated reading for ${nodeId} with Hedera proof`);
 
     return reading;
   } catch (error) {
