@@ -1,11 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Beams from "@/components/Beams";
-import TargetCursor from "@/components/TargetCursor";
 import TextType from "@/components/TextType";
 import CardNav from "@/components/CardNav";
 import CardSwap, { Card } from "@/components/CardSwap";
+
+// 🔹 Client-only TargetCursor (no SSR)
+const TargetCursor = dynamic(() => import("@/components/TargetCursor"), {
+  ssr: false,
+});
 
 export default function LandingPage() {
   const items = [
@@ -43,10 +48,18 @@ export default function LandingPage() {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
-
       {/* Background */}
       <div className="absolute inset-0 -z-10">
-        <Beams beamWidth={2} beamHeight={15} beamNumber={12} lightColor="#ffffff" speed={2} noiseIntensity={1.75} scale={0.2} rotation={45} />
+        <Beams
+          beamWidth={2}
+          beamHeight={15}
+          beamNumber={12}
+          lightColor="#ffffff"
+          speed={2}
+          noiseIntensity={1.75}
+          scale={0.2}
+          rotation={45}
+        />
       </div>
 
       {/* Navbar */}
@@ -64,19 +77,29 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Cursor */}
-      <TargetCursor spinDuration={2} hideDefaultCursor={true} parallaxOn={true} targetSelector=".cursor-target" />
+      {/* Cursor (client-only via dynamic import) */}
+      <TargetCursor
+        spinDuration={2}
+        hideDefaultCursor={true}
+        parallaxOn={true}
+        targetSelector=".cursor-target"
+      />
 
       {/* Content */}
       <main className="min-h-screen flex items-start justify-center pt-24 mt-35">
         <section className="flex flex-col items-center justify-start text-center px-6 py-8 max-w-5xl w-full mt-6">
-
           {/* Hero */}
           <h1 className="text-5xl font-extrabold text-white mb-4 drop-shadow-lg flex gap-3 flex-wrap justify-center">
             <span className="cursor-target">Welcome</span>
             <span className="cursor-target">to</span>
             <span className="cursor-target text-yellow-400 inline-flex items-center">
-              <TextType text={["AeroLink", "Future of DePIN", "Live Air Quality", "Hedera"]} typingSpeed={75} pauseDuration={1500} showCursor={true} cursorCharacter="|" />
+              <TextType
+                text={["AeroLink", "Future of DePIN", "Live Air Quality", "Hedera"]}
+                typingSpeed={75}
+                pauseDuration={1500}
+                showCursor={true}
+                cursorCharacter="|"
+              />
             </span>
           </h1>
 
@@ -87,15 +110,21 @@ export default function LandingPage() {
 
           {/* CTA */}
           <div className="mb-24">
-            <Link href="/dashboard" className="cursor-target inline-block px-8 py-3 bg-yellow-500 text-black rounded-xl shadow-lg hover:bg-yellow-600 transition-all text-lg font-semibold">
+            <Link
+              href="/dashboard"
+              className="cursor-target inline-block px-8 py-3 bg-yellow-500 text-black rounded-xl shadow-lg 
+                         hover:bg-yellow-600 transition-all text-lg font-semibold"
+            >
               Launch App
             </Link>
           </div>
 
           {/* Cards + Side Text */}
-          <div className="w-full flex items-center justify-center" style={{ height: 600, position: "relative" }}>
+          <div
+            className="w-full flex items-center justify-center"
+            style={{ height: 600, position: "relative" }}
+          >
             <div className="w-full h-full flex flex-row items-center justify-center gap-10">
-
               {/* Left Text */}
               <div className="hidden md:flex flex-col items-start justify-center flex-1">
                 <div className="text-6xl md:text-6xl font-black text-yellow-400 leading-tight mt-30">
@@ -110,7 +139,6 @@ export default function LandingPage() {
               {/* Cards */}
               <div className="h-full max-w-[900px] w-full translate-x-30 mb-10">
                 <CardSwap cardDistance={60} verticalDistance={70} delay={5000} pauseOnHover={false}>
-
                   {/* Card 1 */}
                   <Card>
                     <div className="p-8 bg-black border border-white/20 rounded-xl shadow-lg max-w-xs mx-auto text-left mt-25">
@@ -118,8 +146,8 @@ export default function LandingPage() {
                         Real-Time Monitoring
                       </h3>
                       <ul className="text-sm list-disc pl-4 space-y-3 text-yellow-400">
-                        <li>PM2.5 & PM10 live readings</li>
-                        <li>Temperature & humidity tracking</li>
+                        <li>PM2.5 &amp; PM10 live readings</li>
+                        <li>Temperature &amp; humidity tracking</li>
                         <li>Geo-tagged sensor nodes</li>
                       </ul>
                     </div>
@@ -134,7 +162,7 @@ export default function LandingPage() {
                       <ul className="text-sm list-disc pl-4 space-y-3 text-yellow-400">
                         <li>HCS proof per sensor reading</li>
                         <li>AERO token via HTS</li>
-                        <li>Uptime & data quality scoring</li>
+                        <li>Uptime &amp; data quality scoring</li>
                       </ul>
                     </div>
                   </Card>
@@ -143,19 +171,17 @@ export default function LandingPage() {
                   <Card>
                     <div className="p-8 bg-black border border-white/20 rounded-xl shadow-lg max-w-xs mx-auto text-left mt-25">
                       <h3 className="text-xl font-semibold text-yellow-400 mb-6">
-                        Buy & Sell Data
+                        Buy &amp; Sell Data
                       </h3>
                       <ul className="text-sm list-disc pl-4 space-y-3 text-yellow-400">
                         <li>Monetize verified node data</li>
                         <li>Access historical AQI datasets</li>
-                        <li>Power dashboards & research APIs</li>
+                        <li>Power dashboards &amp; research APIs</li>
                       </ul>
                     </div>
                   </Card>
-
                 </CardSwap>
               </div>
-
             </div>
           </div>
         </section>
