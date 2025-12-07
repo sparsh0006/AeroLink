@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useSWR from 'swr';
+import dynamic from 'next/dynamic';
 import {
   fetchRecentReadings,
   fetchAllNodes,
@@ -9,24 +10,33 @@ import {
   Reading,
   Node,
 } from '@/lib/api';
-import MapView from '@/components/MapView';
 import NodeCard from '@/components/NodeCard';
 
-export default function Home() {
+// 🔹 Dynamically import MapView – client-only, no SSR
+const MapView = dynamic(() => import('@/components/MapView'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[500px] flex items-center justify-center">
+      <div className="text-zinc-300">Loading map...</div>
+    </div>
+  ),
+});
+
+export default function DashboardPage() {
   const {
     data: readings,
     error,
     isLoading,
   } = useSWR<Reading[]>('readings', fetchRecentReadings, {
-    refreshInterval: 5000, // Refresh every 5 seconds to show new readings
+    refreshInterval: 5000,
   });
 
   const { data: nodes } = useSWR<Node[]>('nodes', fetchAllNodes, {
-    refreshInterval: 10000, // Refresh every 10 seconds
+    refreshInterval: 10000,
   });
 
   const { data: stats } = useSWR('dashboard-stats', fetchDashboardStats, {
-    refreshInterval: 5000, // Refresh stats every 5 seconds
+    refreshInterval: 5000,
   });
 
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
@@ -34,10 +44,6 @@ export default function Home() {
   const uniqueNodes = readings
     ? Array.from(new Map(readings.map((r) => [r.nodeId, r])).values())
     : [];
-
-  const filteredReadings = selectedNode
-    ? readings?.filter((r) => r.nodeId === selectedNode) || []
-    : readings || [];
 
   const latestReadingPerNode = uniqueNodes.reduce((acc, reading) => {
     if (
@@ -49,7 +55,6 @@ export default function Home() {
     return acc;
   }, {} as Record<string, Reading>);
 
-  // Combine readings and nodes for map display
   const mapDataPoints: Reading[] = [
     ...Object.values(latestReadingPerNode),
     ...(nodes || [])
@@ -173,13 +178,8 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-yellow-400 mb-4">
             Live Network Map
           </h2>
-          {isLoading ? (
-            <div className="h-[500px] flex items-center justify-center">
-              <div className="text-zinc-300">Loading map...</div>
-            </div>
-          ) : (
-            <MapView readings={mapDataPoints} />
-          )}
+          {/* MapView is now client-only */}
+          <MapView readings={mapDataPoints} />
         </div>
 
         {/* Node Filter */}
