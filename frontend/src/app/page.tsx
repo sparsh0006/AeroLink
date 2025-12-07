@@ -1,209 +1,169 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { fetchRecentReadings, fetchAllNodes, fetchDashboardStats, Reading, Node } from '@/lib/api';
-import MapView from '@/componnents/MapView';
-import NodeCard from '@/componnents/NodeCard';
+import Link from "next/link";
+import Beams from "@/components/Beams";
+import TargetCursor from "@/components/TargetCursor";
+import TextType from "@/components/TextType";
+import CardNav from "@/components/CardNav";
+import CardSwap, { Card } from "@/components/CardSwap";
 
-export default function Home() {
-  const { data: readings, error, isLoading } = useSWR<Reading[]>('readings', fetchRecentReadings, {
-    refreshInterval: 5000, // Refresh every 5 seconds to show new readings
-  });
-
-  const { data: nodes } = useSWR<Node[]>('nodes', fetchAllNodes, {
-    refreshInterval: 10000, // Refresh every 10 seconds
-  });
-
-  const { data: stats } = useSWR('dashboard-stats', fetchDashboardStats, {
-    refreshInterval: 5000, // Refresh stats every 5 seconds
-  });
-
-  const [selectedNode, setSelectedNode] = useState<string | null>(null);
-
-  const uniqueNodes = readings
-    ? Array.from(new Map(readings.map((r) => [r.nodeId, r])).values())
-    : [];
-
-  const filteredReadings = selectedNode
-    ? readings?.filter((r) => r.nodeId === selectedNode) || []
-    : readings || [];
-
-  const latestReadingPerNode = uniqueNodes.reduce((acc, reading) => {
-    if (!acc[reading.nodeId] || new Date(reading.timestamp) > new Date(acc[reading.nodeId].timestamp)) {
-      acc[reading.nodeId] = reading;
-    }
-    return acc;
-  }, {} as Record<string, Reading>);
-
-  // Combine readings and nodes for map display
-  const mapDataPoints: Reading[] = [
-    ...Object.values(latestReadingPerNode),
-    ...(nodes || []).filter(node => 
-      !Object.keys(latestReadingPerNode).includes(node.nodeId)
-    ).map(node => {
-      const nodeHedera: any = (node as any).hedera;
-      return {
-        _id: node._id,
-        nodeId: node.nodeId,
-        timestamp: (node as any).registeredAt?.toString() || new Date().toISOString(),
-        location: node.location,
-        sensors: {
-          pm25: 0,
-          pm10: 0,
-          temp: 0,
-          rh: 0
-        },
-        aqi: { value: 0, category: 'No Data' },
-        source: 'node' as const,
-        hedera: nodeHedera
-          ? {
-              topicId: nodeHedera.topicId,
-              messageId: nodeHedera.messageId ?? nodeHedera.registrationTxId ?? '',
-              consensusTimestamp: nodeHedera.consensusTimestamp ?? new Date().toISOString(),
-              publishedMessage: nodeHedera.publishedMessage ?? null
-            }
-          : undefined
-      } as Reading;
-    })
+export default function LandingPage() {
+  const items = [
+    {
+      label: "About",
+      bgColor: "#0D0716",
+      textColor: "#fff",
+      links: [
+        { label: "About AeroLink", ariaLabel: "About AeroLink", href: "/about/aerolink" },
+        { label: "Team", ariaLabel: "AeroLink Team", href: "/about/team" },
+        { label: "Hedera Network", ariaLabel: "About Hedera Network", href: "https://hedera.com" },
+      ],
+    },
+    {
+      label: "Projects",
+      bgColor: "#170D27",
+      textColor: "#fff",
+      links: [
+        { label: "Register Node", ariaLabel: "Register Node", href: "/register" },
+        { label: "Earn Token", ariaLabel: "Earn Token", href: "/docs/rewards" },
+        { label: "Sell Data", ariaLabel: "Sell Data", href: "/marketplace" },
+      ],
+    },
+    {
+      label: "Contact",
+      bgColor: "#271E37",
+      textColor: "#fff",
+      links: [
+        { label: "Email", ariaLabel: "Email us", href: "mailto:621sparsh@gmail.com" },
+        { label: "Twitter", ariaLabel: "Twitter", href: "https://x.com/sparshtwt" },
+        { label: "LinkedIn", ariaLabel: "LinkedIn", href: "https://www.linkedin.com/in/sparsh-a3b837319/" },
+      ],
+    },
   ];
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-2">Error Loading Data</h1>
-          <p className="text-gray-600">Please make sure the backend server is running.</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800">
-                AeroLink DePIN
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Decentralized Weather & Pollution Monitoring Network
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <a
-                href="/register"
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-              >
-                Register Node
-              </a>
-              <a
-                href="/marketplace"
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
-              >
-                Marketplace
-              </a>
-              <div className="text-right">
-                <div className="text-sm text-gray-600">Powered by</div>
-                <div className="text-lg font-semibold text-purple-600">Hedera</div>
-              </div>
-            </div>
-          </div>
+    <div className="w-full h-full relative overflow-hidden bg-black">
+
+      {/* Background */}
+      <div className="absolute inset-0 -z-10">
+        <Beams beamWidth={2} beamHeight={15} beamNumber={12} lightColor="#ffffff" speed={2} noiseIntensity={1.75} scale={0.2} rotation={45} />
+      </div>
+
+      {/* Navbar */}
+      <header className="w-full z-30">
+        <div className="container mx-auto px-4 py-6 mb-10 mt-20">
+          <CardNav
+            logo={"AeroLink"}
+            items={items}
+            baseColor="#FDC700"
+            menuColor="#000000"
+            buttonBgColor="#111111"
+            buttonTextColor="#ffffff"
+            ease="power3.out"
+          />
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-600 mb-1">Active Nodes</div>
-            <div className="text-3xl font-bold text-gray-800">
-              {stats?.activeNodes || 0}
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-600 mb-1">Total Readings</div>
-            <div className="text-3xl font-bold text-gray-800">
-              {stats?.totalReadings || 0}
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-600 mb-1">Avg AQI</div>
-            <div className="text-3xl font-bold text-gray-800">
-              {stats?.avgAQI || 0}
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-600 mb-1">Hedera Verified</div>
-            <div className="text-3xl font-bold text-purple-600">
-              {stats?.hederaVerified || 0}
-            </div>
-          </div>
-        </div>
+      {/* Cursor */}
+      <TargetCursor spinDuration={2} hideDefaultCursor={true} parallaxOn={true} targetSelector=".cursor-target" />
 
-        {/* Map */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Live Network Map
-          </h2>
-          {isLoading ? (
-            <div className="h-[500px] flex items-center justify-center">
-              <div className="text-gray-600">Loading map...</div>
-            </div>
-          ) : (
-            <MapView readings={mapDataPoints} />
-          )}
-        </div>
+      {/* Content */}
+      <main className="min-h-screen flex items-start justify-center pt-24 mt-35">
+        <section className="flex flex-col items-center justify-start text-center px-6 py-8 max-w-5xl w-full mt-6">
 
-        {/* Node Filter */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Filter by Node
-          </label>
-          <select
-            value={selectedNode || ''}
-            onChange={(e) => setSelectedNode(e.target.value || null)}
-            className="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-          >
-            <option value="">All Nodes</option>
-            {uniqueNodes.map((reading) => (
-              <option key={reading.nodeId} value={reading.nodeId}>
-                {reading.nodeId}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Hero */}
+          <h1 className="text-5xl font-extrabold text-white mb-4 drop-shadow-lg flex gap-3 flex-wrap justify-center">
+            <span className="cursor-target">Welcome</span>
+            <span className="cursor-target">to</span>
+            <span className="cursor-target text-yellow-400 inline-flex items-center">
+              <TextType text={["AeroLink", "Future of DePIN", "Live Air Quality", "Hedera"]} typingSpeed={75} pauseDuration={1500} showCursor={true} cursorCharacter="|" />
+            </span>
+          </h1>
 
-        {/* Node Cards */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            {selectedNode ? `Readings from ${selectedNode}` : 'Latest Readings'}
-          </h2>
-          {isLoading ? (
-            <div className="text-center py-12">
-              <div className="text-gray-600">Loading readings...</div>
+          <p className="text-lg text-gray-300 max-w-2xl mb-8 drop-shadow">
+            A decentralized weather & pollution monitoring network powered by Hedera.
+            Track real-time air quality, explore nodes, and experience a trustless IoT ecosystem.
+          </p>
+
+          {/* CTA */}
+          <div className="mb-24">
+            <Link href="/dashboard" className="cursor-target inline-block px-8 py-3 bg-yellow-500 text-black rounded-xl shadow-lg hover:bg-yellow-600 transition-all text-lg font-semibold">
+              Launch App
+            </Link>
+          </div>
+
+          {/* Cards + Side Text */}
+          <div className="w-full flex items-center justify-center" style={{ height: 600, position: "relative" }}>
+            <div className="w-full h-full flex flex-row items-center justify-center gap-10">
+
+              {/* Left Text */}
+              <div className="hidden md:flex flex-col items-start justify-center flex-1">
+                <div className="text-6xl md:text-6xl font-black text-yellow-400 leading-tight mt-30">
+                  MONITOR
+                  <br />
+                  REWARD
+                  <br />
+                  TRADE
+                </div>
+              </div>
+
+              {/* Cards */}
+              <div className="h-full max-w-[900px] w-full translate-x-30 mb-10">
+                <CardSwap cardDistance={60} verticalDistance={70} delay={5000} pauseOnHover={false}>
+
+                  {/* Card 1 */}
+                  <Card>
+                    <div className="p-8 bg-black border border-white/20 rounded-xl shadow-lg max-w-xs mx-auto text-left mt-25">
+                      <h3 className="text-xl font-semibold text-yellow-400 mb-6">
+                        Real-Time Monitoring
+                      </h3>
+                      <ul className="text-sm list-disc pl-4 space-y-3 text-yellow-400">
+                        <li>PM2.5 & PM10 live readings</li>
+                        <li>Temperature & humidity tracking</li>
+                        <li>Geo-tagged sensor nodes</li>
+                      </ul>
+                    </div>
+                  </Card>
+
+                  {/* Card 2 */}
+                  <Card>
+                    <div className="p-8 bg-black border border-white/20 rounded-xl shadow-lg max-w-xs mx-auto text-left mt-25">
+                      <h3 className="text-xl font-semibold text-yellow-400 mb-6">
+                        Hedera-Backed Rewards
+                      </h3>
+                      <ul className="text-sm list-disc pl-4 space-y-3 text-yellow-400">
+                        <li>HCS proof per sensor reading</li>
+                        <li>AERO token via HTS</li>
+                        <li>Uptime & data quality scoring</li>
+                      </ul>
+                    </div>
+                  </Card>
+
+                  {/* Card 3 */}
+                  <Card>
+                    <div className="p-8 bg-black border border-white/20 rounded-xl shadow-lg max-w-xs mx-auto text-left mt-25">
+                      <h3 className="text-xl font-semibold text-yellow-400 mb-6">
+                        Buy & Sell Data
+                      </h3>
+                      <ul className="text-sm list-disc pl-4 space-y-3 text-yellow-400">
+                        <li>Monetize verified node data</li>
+                        <li>Access historical AQI datasets</li>
+                        <li>Power dashboards & research APIs</li>
+                      </ul>
+                    </div>
+                  </Card>
+
+                </CardSwap>
+              </div>
+
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {Object.values(latestReadingPerNode).map((reading) => (
-                <NodeCard key={reading._id} reading={reading} />
-              ))}
-            </div>
-          )}
-        </div>
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="container mx-auto px-4 py-6 text-center text-gray-600 text-sm">
-          <p>
-            AeroLink DePIN © 2025 | Built with Hedera Consensus Service (HCS) &
-            Token Service (HTS)
-          </p>
-        </div>
+      <footer className="h-[60px] mt-15 cursor-target py-6 text-center text-gray-400 text-sm">
+        AeroLink © 2025 — Powered by Hedera
       </footer>
     </div>
   );

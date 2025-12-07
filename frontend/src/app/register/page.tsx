@@ -36,8 +36,8 @@ export default function RegisterNode() {
   const availableSensors = ['PM2.5', 'PM10', 'CO2', 'NO2', 'O3', 'Temperature', 'Humidity'];
 
   const handleSensorToggle = (sensor: string) => {
-    setSelectedSensors(prev => 
-      prev.includes(sensor) 
+    setSelectedSensors(prev =>
+      prev.includes(sensor)
         ? prev.filter(s => s !== sensor)
         : [...prev, sensor]
     );
@@ -81,7 +81,7 @@ export default function RegisterNode() {
       const response = await registerNode(submitData);
       setNodeResponse(response);
       setSuccess(true);
-      
+
       setTimeout(() => router.push('/'), 3000);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to register node');
@@ -90,96 +90,105 @@ export default function RegisterNode() {
     }
   };
 
-  const inputClass = "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900";
+  const inputClass =
+    'w-full px-4 py-2 rounded-lg border border-yellow-500/40 bg-black/40 text-yellow-50 placeholder:text-zinc-500 focus:ring-2 focus:ring-yellow-400 focus:border-transparent';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black py-12">
       <div className="container mx-auto px-4 max-w-4xl">
-        <div className="bg-white rounded-lg shadow-xl p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Register New Node</h1>
-          <p className="text-gray-600 mb-8">Join the AeroLink DePIN network and start earning rewards</p>
+        <div className="bg-zinc-950/80 border border-yellow-500/30 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.7)] p-8">
+          <h1 className="text-3xl font-bold text-yellow-400 mb-2">Register New Node</h1>
+          <p className="text-zinc-300 mb-8">
+            Join the AeroLink DePIN network and start earning rewards.
+          </p>
 
           {success && nodeResponse && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            <div className="bg-emerald-900/40 border border-emerald-500/60 text-emerald-200 px-4 py-3 rounded mb-6">
               <div className="font-semibold mb-2">✅ Node registered successfully on Hedera!</div>
               <div className="text-sm space-y-1">
-                <div><strong>Node ID:</strong> {nodeResponse.node.nodeId}</div>
-                <div><strong>Transaction:</strong> {nodeResponse.node.hedera.transactionId}</div>
                 <div>
-                  <a 
+                  <strong>Node ID:</strong> {nodeResponse.node.nodeId}
+                </div>
+                <div>
+                  <strong>Transaction:</strong> {nodeResponse.node.hedera.transactionId}
+                </div>
+                <div>
+                  <a
                     href={nodeResponse.node.hedera.explorerUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-green-800 underline hover:text-green-900"
+                    className="text-emerald-200 underline hover:text-emerald-100"
                   >
                     View on Hedera Explorer →
                   </a>
                 </div>
               </div>
-              <div className="mt-2 text-sm">Redirecting to dashboard...</div>
+              <div className="mt-2 text-sm text-zinc-200">Redirecting to dashboard...</div>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+            <div className="bg-red-900/40 border border-red-500/60 text-red-200 px-4 py-3 rounded mb-6">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-8 text-yellow-50">
             {/* Owner Information */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Owner Information</h2>
+              <h2 className="text-xl font-semibold text-yellow-400 mb-4">Owner Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     Owner Name *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.ownerName}
-                    onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
                     className={inputClass}
                     placeholder="John Doe"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     Email *
                   </label>
                   <input
                     type="email"
                     required
                     value={formData.ownerEmail}
-                    onChange={(e) => setFormData({...formData, ownerEmail: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, ownerEmail: e.target.value })}
                     className={inputClass}
                     placeholder="owner@example.com"
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     Hedera Wallet Address *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.ownerWallet}
-                    onChange={(e) => setFormData({...formData, ownerWallet: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, ownerWallet: e.target.value })}
                     className={inputClass}
                     placeholder="0.0.12345"
                   />
-                  <p className="text-xs text-gray-500 mt-1">This address will receive rewards and payments</p>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    This address will receive rewards and payments.
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* Location */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Node Location</h2>
+              <h2 className="text-xl font-semibold text-yellow-400 mb-4">Node Location</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     Latitude *
                   </label>
                   <input
@@ -187,13 +196,18 @@ export default function RegisterNode() {
                     step="any"
                     required
                     value={formData.location.lat}
-                    onChange={(e) => setFormData({...formData, location: {...formData.location, lat: e.target.value}})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        location: { ...formData.location, lat: e.target.value }
+                      })
+                    }
                     className={inputClass}
                     placeholder="11.0168"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     Longitude *
                   </label>
                   <input
@@ -201,59 +215,84 @@ export default function RegisterNode() {
                     step="any"
                     required
                     value={formData.location.lon}
-                    onChange={(e) => setFormData({...formData, location: {...formData.location, lon: e.target.value}})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        location: { ...formData.location, lon: e.target.value }
+                      })
+                    }
                     className={inputClass}
                     placeholder="76.9558"
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     Address *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.location.address}
-                    onChange={(e) => setFormData({...formData, location: {...formData.location, address: e.target.value}})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        location: { ...formData.location, address: e.target.value }
+                      })
+                    }
                     className={inputClass}
                     placeholder="123 Main Street"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     City *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.location.city}
-                    onChange={(e) => setFormData({...formData, location: {...formData.location, city: e.target.value}})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        location: { ...formData.location, city: e.target.value }
+                      })
+                    }
                     className={inputClass}
                     placeholder="Coimbatore"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     State *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.location.state}
-                    onChange={(e) => setFormData({...formData, location: {...formData.location, state: e.target.value}})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        location: { ...formData.location, state: e.target.value }
+                      })
+                    }
                     className={inputClass}
                     placeholder="Tamil Nadu"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-200 mb-2">
                     Country *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.location.country}
-                    onChange={(e) => setFormData({...formData, location: {...formData.location, country: e.target.value}})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        location: { ...formData.location, country: e.target.value }
+                      })
+                    }
                     className={inputClass}
                     placeholder="India"
                   />
@@ -263,20 +302,23 @@ export default function RegisterNode() {
 
             {/* Sensors */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Sensors</h2>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <h2 className="text-xl font-semibold text-yellow-400 mb-4">Sensors</h2>
+              <label className="block text-sm font-medium text-zinc-200 mb-3">
                 Select sensors available on your node * (at least one)
               </label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {availableSensors.map((sensor) => (
-                  <label key={sensor} className="flex items-center space-x-2 cursor-pointer p-3 border border-gray-200 rounded-lg hover:bg-purple-50 transition-colors">
+                  <label
+                    key={sensor}
+                    className="flex items-center space-x-2 cursor-pointer p-3 border border-yellow-500/40 rounded-lg bg-black/40 hover:bg-yellow-500/10 transition-colors"
+                  >
                     <input
                       type="checkbox"
                       checked={selectedSensors.includes(sensor)}
                       onChange={() => handleSensorToggle(sensor)}
-                      className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
+                      className="w-5 h-5 text-yellow-500 rounded focus:ring-yellow-400 bg-black border-yellow-500/60"
                     />
-                    <span className="text-sm text-gray-900 font-medium">{sensor}</span>
+                    <span className="text-sm text-yellow-50 font-medium">{sensor}</span>
                   </label>
                 ))}
               </div>
@@ -284,63 +326,80 @@ export default function RegisterNode() {
 
             {/* Data Marketplace */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Data Marketplace (Optional)</h2>
+              <h2 className="text-xl font-semibold text-yellow-400 mb-4">
+                Data Marketplace (Optional)
+              </h2>
               <div className="mb-4">
-                <label className="flex items-center space-x-3 cursor-pointer p-4 border border-gray-200 rounded-lg hover:bg-purple-50 transition-colors">
+                <label className="flex items-center space-x-3 cursor-pointer p-4 border border-yellow-500/40 rounded-lg bg-black/40 hover:bg-yellow-500/10 transition-colors">
                   <input
                     type="checkbox"
                     checked={formData.dataForSale}
-                    onChange={(e) => setFormData({...formData, dataForSale: e.target.checked})}
-                    className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
+                    onChange={(e) => setFormData({ ...formData, dataForSale: e.target.checked })}
+                    className="w-5 h-5 text-yellow-500 rounded focus:ring-yellow-400 bg-black border-yellow-500/60"
                   />
                   <div>
-                    <span className="text-sm font-medium text-gray-900 block">
+                    <span className="text-sm font-medium text-yellow-50 block">
                       Make my data available for sale
                     </span>
-                    <span className="text-xs text-gray-500">
-                      Earn additional revenue by selling your environmental data
+                    <span className="text-xs text-zinc-400">
+                      Earn additional revenue by selling your environmental data.
                     </span>
                   </div>
                 </label>
               </div>
 
               {formData.dataForSale && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-black/60 rounded-lg border border-yellow-500/40">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-200 mb-2">
                       Price per Reading (USD)
                     </label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.pricing.pricePerReading}
-                      onChange={(e) => setFormData({...formData, pricing: {...formData.pricing, pricePerReading: e.target.value}})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pricing: { ...formData.pricing, pricePerReading: e.target.value }
+                        })
+                      }
                       className={inputClass}
                       placeholder="0.10"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-200 mb-2">
                       Monthly Subscription (USD)
                     </label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.pricing.subscriptionMonthly}
-                      onChange={(e) => setFormData({...formData, pricing: {...formData.pricing, subscriptionMonthly: e.target.value}})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pricing: { ...formData.pricing, subscriptionMonthly: e.target.value }
+                        })
+                      }
                       className={inputClass}
                       placeholder="50.00"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-200 mb-2">
                       Bulk (per 1000 readings)
                     </label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.pricing.bulkDataPrice}
-                      onChange={(e) => setFormData({...formData, pricing: {...formData.pricing, bulkDataPrice: e.target.value}})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pricing: { ...formData.pricing, bulkDataPrice: e.target.value }
+                        })
+                      }
                       className={inputClass}
                       placeholder="80.00"
                     />
@@ -354,14 +413,14 @@ export default function RegisterNode() {
               <button
                 type="submit"
                 disabled={loading || selectedSensors.length === 0}
-                className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-yellow-500 hover:bg-yellow-400 disabled:bg-zinc-700 text-black font-medium py-3 px-6 rounded-lg transition-colors"
               >
                 {loading ? 'Registering on Hedera...' : 'Register Node'}
               </button>
               <button
                 type="button"
                 onClick={() => router.push('/')}
-                className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 border border-zinc-600 rounded-lg text-zinc-200 hover:bg-zinc-900 transition-colors"
               >
                 Cancel
               </button>

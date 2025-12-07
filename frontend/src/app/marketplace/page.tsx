@@ -18,7 +18,6 @@ export default function Marketplace() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Fetch all listings on mount
   useEffect(() => {
     loadListings();
   }, []);
@@ -37,28 +36,23 @@ export default function Marketplace() {
     }
   };
 
-  // Apply filters locally
   useEffect(() => {
     let filtered = [...listings];
 
     if (filters.city.trim()) {
-      filtered = filtered.filter(node => 
+      filtered = filtered.filter((node) =>
         node.location.city.toLowerCase().includes(filters.city.toLowerCase())
       );
     }
 
     if (filters.minPrice) {
       const min = parseFloat(filters.minPrice);
-      filtered = filtered.filter(node => 
-        (node.pricing?.pricePerReading || 0) >= min
-      );
+      filtered = filtered.filter((node) => (node.pricing?.pricePerReading || 0) >= min);
     }
 
     if (filters.maxPrice) {
       const max = parseFloat(filters.maxPrice);
-      filtered = filtered.filter(node => 
-        (node.pricing?.pricePerReading || 0) <= max
-      );
+      filtered = filtered.filter((node) => (node.pricing?.pricePerReading || 0) <= max);
     }
 
     setFilteredListings(filtered);
@@ -110,19 +104,24 @@ export default function Marketplace() {
     }
   };
 
+  const inputClass =
+    'w-full px-4 py-2 border border-yellow-500/40 bg-black/40 text-yellow-50 placeholder:text-zinc-500 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent';
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="border-b border-yellow-500/30 bg-black/80 backdrop-blur">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">Data Marketplace</h1>
-              <p className="text-gray-600 mt-1">Purchase environmental data from verified nodes</p>
+              <h1 className="text-3xl font-bold text-yellow-400">Data Marketplace</h1>
+              <p className="text-zinc-300 mt-1">
+                Purchase environmental data from verified AeroLink nodes.
+              </p>
             </div>
             <a
               href="/"
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              className="px-4 py-2 bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 transition-colors font-medium"
             >
               ← Back to Dashboard
             </a>
@@ -130,61 +129,70 @@ export default function Marketplace() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 text-yellow-50">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-600 mb-1">Available Nodes</div>
-            <div className="text-3xl font-bold text-purple-600">{listings.length}</div>
+          <div className="bg-zinc-950/70 border border-yellow-500/30 rounded-xl shadow p-6">
+            <div className="text-sm text-zinc-400 mb-1">Available Nodes</div>
+            <div className="text-3xl font-bold text-yellow-400">{listings.length}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-600 mb-1">Filtered Results</div>
-            <div className="text-3xl font-bold text-gray-800">{filteredListings.length}</div>
+          <div className="bg-zinc-950/70 border border-yellow-500/30 rounded-xl shadow p-6">
+            <div className="text-sm text-zinc-400 mb-1">Filtered Results</div>
+            <div className="text-3xl font-bold text-yellow-400">{filteredListings.length}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-600 mb-1">Avg Price (USD)</div>
-            <div className="text-3xl font-bold text-green-600">
-              ${listings.length > 0 
-                ? (listings.reduce((sum, n) => sum + (n.pricing?.pricePerReading || 0), 0) / listings.length).toFixed(2)
-                : '0.00'
-              }
+          <div className="bg-zinc-950/70 border border-yellow-500/30 rounded-xl shadow p-6">
+            <div className="text-sm text-zinc-400 mb-1">Avg Price (USD)</div>
+            <div className="text-3xl font-bold text-yellow-400">
+              $
+              {listings.length > 0
+                ? (
+                    listings.reduce(
+                      (sum, n) => sum + (n.pricing?.pricePerReading || 0),
+                      0
+                    ) / listings.length
+                  ).toFixed(2)
+                : '0.00'}
             </div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Filters</h2>
+        <div className="bg-zinc-950/80 border border-yellow-500/30 rounded-xl shadow-md p-6 mb-8">
+          <h2 className="text-xl font-semibold text-yellow-400 mb-4">Filters</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+              <label className="block text-sm font-medium text-zinc-200 mb-2">City</label>
               <input
                 type="text"
                 value={filters.city}
                 onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                className={inputClass}
                 placeholder="Enter city name"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Min Price (USD)</label>
+              <label className="block text-sm font-medium text-zinc-200 mb-2">
+                Min Price (USD)
+              </label>
               <input
                 type="number"
                 step="0.01"
                 value={filters.minPrice}
                 onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                className={inputClass}
                 placeholder="0.00"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Max Price (USD)</label>
+              <label className="block text-sm font-medium text-zinc-200 mb-2">
+                Max Price (USD)
+              </label>
               <input
                 type="number"
                 step="0.01"
                 value={filters.maxPrice}
                 onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                className={inputClass}
                 placeholder="10.00"
               />
             </div>
@@ -193,45 +201,55 @@ export default function Marketplace() {
 
         {/* Listings */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="text-gray-600">Loading marketplace listings...</div>
+          <div className="text-center py-12 text-zinc-300">
+            Loading marketplace listings...
           </div>
         ) : error ? (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-900/40 border border-red-500/60 text-red-200 px-4 py-3 rounded">
             {error}
           </div>
         ) : filteredListings.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-600">
-              {listings.length === 0 
-                ? 'No data available for sale yet. Register a node to get started!'
-                : 'No listings match your filters.'}
-            </div>
+          <div className="text-center py-12 text-zinc-300">
+            {listings.length === 0
+              ? 'No data available for sale yet. Register a node to get started!'
+              : 'No listings match your filters.'}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredListings.map((node) => (
-              <div key={node._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-4">
+              <div
+                key={node._id}
+                className="bg-zinc-950/80 border border-yellow-500/30 rounded-xl overflow-hidden hover:border-yellow-400 hover:shadow-[0_0_30px_rgba(250,204,21,0.25)] transition-all"
+              >
+                <div className="bg-yellow-500 text-black p-4">
                   <h3 className="text-xl font-bold">{node.nodeId}</h3>
-                  <p className="text-sm opacity-90">{node.location.city}, {node.location.state}</p>
+                  <p className="text-sm">
+                    {node.location.city}, {node.location.state}
+                  </p>
                 </div>
 
                 <div className="p-6">
-                  <div className="space-y-3 mb-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Owner:</span>
-                      <span className="font-medium">{node.ownerName}</span>
+                  <div className="space-y-3 mb-4 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-zinc-400">Owner:</span>
+                      <span className="font-medium text-yellow-100">
+                        {node.ownerName}
+                      </span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Sensors:</span>
-                      <span className="font-medium">{node.sensors.length}</span>
+                    <div className="flex justify-between">
+                      <span className="text-zinc-400">Sensors:</span>
+                      <span className="font-medium text-yellow-100">
+                        {node.sensors.length}
+                      </span>
                     </div>
-                    <div className="text-sm">
-                      <span className="text-gray-600">Available:</span>
+                    <div>
+                      <span className="text-zinc-400">Available:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {node.sensors.map((sensor, idx) => (
-                          <span key={idx} className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs">
+                          <span
+                            key={idx}
+                            className="px-2 py-1 bg-yellow-500/10 text-yellow-200 border border-yellow-500/40 rounded text-xs"
+                          >
                             {sensor}
                           </span>
                         ))}
@@ -239,22 +257,30 @@ export default function Marketplace() {
                     </div>
                     {node.stats && (
                       <>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Total Readings:</span>
-                          <span className="font-medium">{node.stats.totalReadings}</span>
+                        <div className="flex justify-between">
+                          <span className="text-zinc-400">Total Readings:</span>
+                          <span className="font-medium text-yellow-100">
+                            {node.stats.totalReadings}
+                          </span>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Last 24h:</span>
-                          <span className="font-medium">{node.stats.last24hReadings}</span>
+                        <div className="flex justify-between">
+                          <span className="text-zinc-400">Last 24h:</span>
+                          <span className="font-medium text-yellow-100">
+                            {node.stats.last24hReadings}
+                          </span>
                         </div>
                         {node.stats.avgAQI && (
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Latest AQI:</span>
-                            <span className={`font-medium ${
-                              node.stats.avgAQI <= 50 ? 'text-green-600' :
-                              node.stats.avgAQI <= 100 ? 'text-yellow-600' :
-                              'text-red-600'
-                            }`}>
+                          <div className="flex justify-between">
+                            <span className="text-zinc-400">Latest AQI:</span>
+                            <span
+                              className={`font-medium ${
+                                node.stats.avgAQI <= 50
+                                  ? 'text-emerald-400'
+                                  : node.stats.avgAQI <= 100
+                                  ? 'text-yellow-300'
+                                  : 'text-red-400'
+                              }`}
+                            >
                               {node.stats.avgAQI}
                             </span>
                           </div>
@@ -263,20 +289,26 @@ export default function Marketplace() {
                     )}
                   </div>
 
-                  <div className="border-t border-gray-200 pt-4 mb-4">
-                    <div className="text-sm font-semibold text-gray-700 mb-2">Pricing</div>
-                    <div className="space-y-1 text-sm">
+                  <div className="border-t border-zinc-700 pt-4 mb-4 text-sm">
+                    <div className="font-semibold text-zinc-200 mb-2">Pricing</div>
+                    <div className="space-y-1">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Per Reading:</span>
-                        <span className="font-medium">${node.pricing?.pricePerReading.toFixed(2)}</span>
+                        <span className="text-zinc-400">Per Reading:</span>
+                        <span className="font-medium text-yellow-300">
+                          ${node.pricing?.pricePerReading.toFixed(2)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Monthly Sub:</span>
-                        <span className="font-medium">${node.pricing?.subscriptionMonthly.toFixed(2)}</span>
+                        <span className="text-zinc-400">Monthly Sub:</span>
+                        <span className="font-medium text-yellow-300">
+                          ${node.pricing?.subscriptionMonthly.toFixed(2)}
+                        </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Bulk (1k):</span>
-                        <span className="font-medium">${node.pricing?.bulkDataPrice.toFixed(2)}</span>
+                        <span className="text-zinc-400">Bulk (1k):</span>
+                        <span className="font-medium text-yellow-300">
+                          ${node.pricing?.bulkDataPrice.toFixed(2)}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -286,7 +318,7 @@ export default function Marketplace() {
                       setSelectedNode(node);
                       setShowPurchaseModal(true);
                     }}
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                    className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-medium py-2 px-4 rounded-lg transition-colors"
                   >
                     Purchase Data
                   </button>
@@ -299,54 +331,60 @@ export default function Marketplace() {
 
       {/* Purchase Modal */}
       {showPurchaseModal && selectedNode && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+          <div className="bg-zinc-950 border border-yellow-500/40 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 text-yellow-50">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h2 className="text-2xl font-bold text-gray-800">Purchase Data</h2>
-                <p className="text-gray-600">{selectedNode.nodeId}</p>
+                <h2 className="text-2xl font-bold text-yellow-400">Purchase Data</h2>
+                <p className="text-zinc-300">{selectedNode.nodeId}</p>
               </div>
               <button
                 onClick={() => setShowPurchaseModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
+                className="text-zinc-500 hover:text-zinc-300 text-2xl"
               >
                 ×
               </button>
             </div>
 
             {purchaseSuccess ? (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+              <div className="bg-emerald-900/40 border border-emerald-500/60 text-emerald-200 px-4 py-3 rounded mb-6">
                 Purchase completed successfully! Redirecting...
               </div>
             ) : (
               <div className="space-y-6">
-                {/* Buyer Information */}
+                {/* Buyer Info */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Buyer Information</h3>
+                  <h3 className="text-lg font-semibold text-yellow-300 mb-3">
+                    Buyer Information
+                  </h3>
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-zinc-200 mb-2">
                         Hedera Wallet Address *
                       </label>
                       <input
                         type="text"
                         required
                         value={buyerInfo.wallet}
-                        onChange={(e) => setBuyerInfo({ ...buyerInfo, wallet: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                        onChange={(e) =>
+                          setBuyerInfo({ ...buyerInfo, wallet: e.target.value })
+                        }
+                        className={inputClass}
                         placeholder="0.0.12345"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-zinc-200 mb-2">
                         Email *
                       </label>
                       <input
                         type="email"
                         required
                         value={buyerInfo.email}
-                        onChange={(e) => setBuyerInfo({ ...buyerInfo, email: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                        onChange={(e) =>
+                          setBuyerInfo({ ...buyerInfo, email: e.target.value })
+                        }
+                        className={inputClass}
                         placeholder="buyer@example.com"
                       />
                     </div>
@@ -355,18 +393,20 @@ export default function Marketplace() {
 
                 {/* Purchase Type */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Purchase Type</h3>
+                  <h3 className="text-lg font-semibold text-yellow-300 mb-3">
+                    Purchase Type
+                  </h3>
                   <div className="grid grid-cols-3 gap-3">
                     <button
                       onClick={() => setPurchaseType('single')}
                       className={`p-4 border-2 rounded-lg text-center transition-colors ${
                         purchaseType === 'single'
-                          ? 'border-purple-600 bg-purple-50'
-                          : 'border-gray-200 hover:border-purple-300'
+                          ? 'border-yellow-400 bg-yellow-500/10'
+                          : 'border-zinc-700 hover:border-yellow-500/60'
                       }`}
                     >
                       <div className="font-semibold">Single Reading</div>
-                      <div className="text-sm text-gray-600 mt-1">
+                      <div className="text-sm text-zinc-300 mt-1">
                         ${selectedNode.pricing?.pricePerReading.toFixed(2)}
                       </div>
                     </button>
@@ -374,12 +414,12 @@ export default function Marketplace() {
                       onClick={() => setPurchaseType('subscription')}
                       className={`p-4 border-2 rounded-lg text-center transition-colors ${
                         purchaseType === 'subscription'
-                          ? 'border-purple-600 bg-purple-50'
-                          : 'border-gray-200 hover:border-purple-300'
+                          ? 'border-yellow-400 bg-yellow-500/10'
+                          : 'border-zinc-700 hover:border-yellow-500/60'
                       }`}
                     >
                       <div className="font-semibold">Subscription</div>
-                      <div className="text-sm text-gray-600 mt-1">
+                      <div className="text-sm text-zinc-300 mt-1">
                         ${selectedNode.pricing?.subscriptionMonthly.toFixed(2)}/mo
                       </div>
                     </button>
@@ -387,22 +427,22 @@ export default function Marketplace() {
                       onClick={() => setPurchaseType('bulk')}
                       className={`p-4 border-2 rounded-lg text-center transition-colors ${
                         purchaseType === 'bulk'
-                          ? 'border-purple-600 bg-purple-50'
-                          : 'border-gray-200 hover:border-purple-300'
+                          ? 'border-yellow-400 bg-yellow-500/10'
+                          : 'border-zinc-700 hover:border-yellow-500/60'
                       }`}
                     >
                       <div className="font-semibold">Bulk Data</div>
-                      <div className="text-sm text-gray-600 mt-1">
+                      <div className="text-sm text-zinc-300 mt-1">
                         ${selectedNode.pricing?.bulkDataPrice.toFixed(2)}/1k
                       </div>
                     </button>
                   </div>
                 </div>
 
-                {/* Additional Options */}
+                {/* Extra Options */}
                 {purchaseType === 'subscription' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-200 mb-2">
                       Duration (days)
                     </label>
                     <input
@@ -411,14 +451,14 @@ export default function Marketplace() {
                       max="365"
                       value={duration}
                       onChange={(e) => setDuration(parseInt(e.target.value))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                      className={inputClass}
                     />
                   </div>
                 )}
 
                 {purchaseType === 'bulk' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-200 mb-2">
                       Number of Readings
                     </label>
                     <input
@@ -427,39 +467,39 @@ export default function Marketplace() {
                       step="100"
                       value={readingsCount}
                       onChange={(e) => setReadingsCount(parseInt(e.target.value))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                      className={inputClass}
                     />
                   </div>
                 )}
 
                 {/* Price Summary */}
-                <div className="bg-purple-50 p-4 rounded-lg">
+                <div className="bg-black/60 border border-yellow-500/40 p-4 rounded-lg">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-700">Price (USD):</span>
-                    <span className="text-2xl font-bold text-gray-800">
+                    <span className="text-zinc-200">Price (USD):</span>
+                    <span className="text-2xl font-bold text-yellow-400">
                       ${calculatePrice().toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">AERO Tokens:</span>
-                    <span className="font-medium text-purple-600">
+                    <span className="text-zinc-400">AERO Tokens:</span>
+                    <span className="font-medium text-yellow-300">
                       {(calculatePrice() * 10).toFixed(0)} AERO
                     </span>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
+                {/* Actions */}
                 <div className="flex gap-3">
                   <button
                     onClick={handlePurchase}
                     disabled={purchasing || !buyerInfo.wallet || !buyerInfo.email}
-                    className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-400 disabled:bg-zinc-700 text-black font-medium py-3 px-6 rounded-lg transition-colors"
                   >
                     {purchasing ? 'Processing...' : 'Complete Purchase'}
                   </button>
                   <button
                     onClick={() => setShowPurchaseModal(false)}
-                    className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="px-6 py-3 border border-zinc-700 rounded-lg text-zinc-200 hover:bg-zinc-900 transition-colors"
                   >
                     Cancel
                   </button>
