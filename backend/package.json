@@ -15,10 +15,12 @@
   "license": "ISC",
   "dependencies": {
     "@hashgraph/sdk": "^2.77.0",
+    "@serialport/parser-readline": "^13.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
-    "mongoose": "^8.20.0"
+    "mongoose": "^8.20.0",
+    "serialport": "^13.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
